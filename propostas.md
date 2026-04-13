@@ -23,12 +23,18 @@ alunos do ensino técino integrado ao ensino médio, alunos do ensino superior e
 ## Líder de turma e avisos gerais
 
 ### Descrição
+Um site pra ajudar na comunicação da turma, onde o líder pode mandar avisos importantes e todo mundo consegue ver de forma organizada, sem depender só de grupo de WhatsApp
 
 ### Problema a ser solucionado
+Muitas vezes os avisos se perdem nos grupos ou nem todo mundo vê, aí acaba tendo gente que perde prova, trabalho ou mudança de horário. A ideia é juntar tudo em um lugar só pra facilitar
 
 ### Público alvo
+Alunos do ensino técnico integrado, ensino superior, líderes de turma e professores do IFNMG - Campus Salinas
 
 ### Funcionalidades
+- Painel de avisos gerais da turma
+- Área para o líder publicar comunicados importantes
+- Calendário com datas de provas, trabalhos e eventos
 
 ---
 
