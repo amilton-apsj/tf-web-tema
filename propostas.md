@@ -40,12 +40,18 @@ Alunos do ensino técnico integrado, ensino superior, líderes de turma e profes
 
 # Proposta 03
 
-## 
+## Sistema de organização de estudos
 
 ### Descrição
+Um site para ajudar os alunos a organizarem seus estudos, com controle de tarefas, horários e conteúdos das matérias.
 
 ### Problema a ser solucionado
+Muitos alunos têm dificuldade em organizar o tempo de estudo e acabam esquecendo tarefas, trabalhos e provas. A proposta ajuda a manter tudo organizado em um só lugar.
 
 ### Público alvo
+Alunos do ensino técnico integrado ao ensino médio e ensino superior do IFNMG - Campus Salinas.
 
 ### Funcionalidades
+- Lista de tarefas e atividades por matéria
+- Calendário com provas, trabalhos e prazos
+- Lembretes de atividades importantes
