@@ -55,3 +55,5 @@ Alunos do ensino técnico integrado ao ensino médio e ensino superior do IFNMG 
 - Lista de tarefas e atividades por matéria
 - Calendário com provas, trabalhos e prazos
 - Lembretes de atividades importantes
+- Criador de Flashcard
+- Banco de questões local
