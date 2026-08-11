@@ -72,3 +72,50 @@ Um Cardápio é composto por vários Itens de Cardápio (ex: uma refeição tem 
 ## 3. Modelo Lógico
 
 ![Modelo Lógico](prisma/schema.prisma)
+
+### Diagrama Mermaid do Banco de Dados
+
+mermaid
+erDiagram
+    Nutricionista ||--o{ Cardapio : "gerencia"
+    Cardapio }|--|{ ItemCardapio : "possui"
+
+    Nutricionista {
+        Int id PK
+        String nome
+        String crn
+        String email
+        String senhaHash
+        DateTime criadoEm
+        DateTime atualizadoEm
+    }
+
+    Cardapio {
+        Int id PK
+        DateTime data
+        String tipo_refeicao
+        String horario_inicio
+        String horario_fim
+        Int nutricionistaId FK
+        DateTime criadoEm
+        DateTime atualizadoEm
+    }
+
+    ItemCardapio {
+        Int id PK
+        String categoria
+        String nome_alimento
+        String restricoes "Opcional"
+        DateTime criadoEm
+        DateTime atualizadoEm
+    }
+
+## 4. Modelo Físico — Migrations e Seed
+
+![Migrations](prisma/migrations)
+
+![Seed](prisma/seed)
+
+## 5. Evidência funcional
+
+![Evidência funcional](db/prisma-studio.png)
