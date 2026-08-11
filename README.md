@@ -75,7 +75,7 @@ Um Cardápio é composto por vários Itens de Cardápio (ex: uma refeição tem 
 
 ### Diagrama Mermaid do Banco de Dados
 
-mermaid
+```mermaid
 erDiagram
     Nutricionista ||--o{ Cardapio : "gerencia"
     Cardapio }|--|{ ItemCardapio : "possui"
@@ -109,6 +109,7 @@ erDiagram
         DateTime criadoEm
         DateTime atualizadoEm
     }
+```
 
 ## 4. Modelo Físico — Migrations e Seed
 
