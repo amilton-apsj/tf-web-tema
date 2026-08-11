@@ -1,8 +1,10 @@
-# dotenv environment variable files
+# Dependências do Node
+node_modules
+
+# Arquivos de variáveis de ambiente
 .env
 .env.*
 !.env.example
 
-# Environment variables
-.env
+# Arquivos gerados
 /generated/prisma
