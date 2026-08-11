@@ -114,7 +114,7 @@ erDiagram
 
 ![Migrations](prisma/migrations)
 
-![Seed](prisma/seed)
+![Seed](prisma/seed.js)
 
 ## 5. Evidência funcional
 
