@@ -7,5 +7,24 @@
   },
   "prisma": {
     "seed": "node prisma/seed.js"
-  }
+  },
+  "name": "tf-web-tema",
+  "version": "1.0.0",
+  "description": "- Amilton Pôrto dos Santos Júnior — [GitHub](https://github.com/amilton-apsj) - Felipe Neres Silva — [GitHub](https://github.com/fns9-del) - Marx Hugo Alves Rocha — [GitHub](https://github.com/mhar-Marx) - Tharcísio Wilker Machado Fernandes — [GitHub](https://github.com/tharcisiowilker) - Vitor Eduardo Batista Bagetti Ramalho — [GitHub](https://github.com/vebbr-lgtm)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amilton-apsj/tf-web-tema.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amilton-apsj/tf-web-tema/issues"
+  },
+  "homepage": "https://github.com/amilton-apsj/tf-web-tema#readme"
 }

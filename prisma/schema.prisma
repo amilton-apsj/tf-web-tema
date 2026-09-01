@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -7,39 +7,58 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Model Nutricionista 
+// Model Nutricionista
 model Nutricionista {
-  id           Int        @id @default(autoincrement())    // PK, gerado automaticamente
-  nome         String                                      // obrigatório
-  crn          String     @unique                          // obrigatório e único
-  email        String     @unique                          // obrigatório e único
-  senhaHash    String                                      // hash da senha (nunca retornado pela API)
-  cardapios    Cardapio[]                                  // relação 1:N - um nutricionista gerencia muitos cardápios
-  criadoEm     DateTime   @default(now())                  // data de criação automática
-  atualizadoEm DateTime   @updatedAt                       // data de atualização automática
+  id           Int        @id @default(autoincrement())
+  nome         String
+  crn          String     @unique
+  email        String     @unique
+  senhaHash    String
+  cardapios    Cardapio[] // Se deletar Nutricionista, apaga seus cardápios
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
 }
 
-// Model Cardapio 
+// Model Cardapio
 model Cardapio {
-  id              Int            @id @default(autoincrement())      // PK, gerado automaticamente
-  data            DateTime                                          // obrigatório (data de exibição no calendário)
-  tipo_refeicao   String                                            // obrigatório (ex: "Almoço" ou "Café da Manhã")
-  horario_inicio  String                                            // obrigatório (ex: "11:15")
-  horario_fim     String                                            // obrigatório (ex: "13:45")
-  nutricionistaId Int                                               // FK, referência ao Nutricionista
-  nutricionista   Nutricionista  @relation(fields: [nutricionistaId], references: [id]) // relação
-  itens           ItemCardapio[]                                    // relação N:M - um cardápio tem muitos itens
-  criadoEm        DateTime       @default(now())                    // data de criação automática
-  atualizadoEm    DateTime       @updatedAt                         // data de atualização automática
+  id              Int            @id @default(autoincrement())
+  data            DateTime
+  tipo_refeicao   String
+  horario_inicio  String
+  horario_fim     String
+  nutricionistaId Int
+  nutricionista   Nutricionista  @relation(fields: [nutricionistaId], references: [id], onDelete: Cascade)
+  itens           ItemCardapio[]
+  criadoEm        DateTime       @default(now())
+  atualizadoEm    DateTime       @updatedAt
 }
 
-// Model ItemCardapio 
+// Model Categoria
+model Categoria {
+  id           Int            @id @default(autoincrement())
+  nome         String         @unique
+  itens        ItemCardapio[] // Se deletar Categoria, apaga os itens associados a ela
+  criadoEm     DateTime       @default(now())
+  atualizadoEm DateTime       @updatedAt
+}
+
+// Model Restricao
+model Restricao {
+  id           Int            @id @default(autoincrement())
+  nome         String         @unique
+  itens        ItemCardapio[]
+  criadoEm     DateTime       @default(now())
+  atualizadoEm DateTime       @updatedAt
+}
+
+// Model ItemCardapio
 model ItemCardapio {
-  id            Int        @id @default(autoincrement())            // PK, gerado automaticamente
-  categoria     String                                              // obrigatório (ex: "Salada", "Prato Principal")
-  nome_alimento String                                              // obrigatório (ex: "Quibe", "Banana")
-  restricoes    String?                                             // opcional (ex: "Vegano", "Contém Lactose")
-  cardapios     Cardapio[]                                          // relação N:M - um item pode estar em vários cardápios
-  criadoEm      DateTime   @default(now())                          // data de criação automática
-  atualizadoEm  DateTime   @updatedAt                               // data de atualização automática
+  id            Int         @id @default(autoincrement())
+  nome_alimento String
+  categoriaId   Int
+  categoria     Categoria   @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  restricoes    Restricao[]
+  cardapios     Cardapio[]
+  criadoEm      DateTime    @default(now())
+  atualizadoEm  DateTime    @updatedAt
 }
