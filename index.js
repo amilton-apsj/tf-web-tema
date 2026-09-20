@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import logger from './middlewares/logger.js';
 import tratarErro from './middlewares/tratarErro.js'; 
+import authRouter from './routes/auth.js';
 import nutricionistasRouter from './routes/nutricionistas.js';
 import cardapiosRouter from './routes/cardapios.js';
 import categoriasRouter from './routes/categorias.js';
@@ -32,6 +33,7 @@ app.use('/cardapios', cardapiosRouter);
 app.use('/categorias', categoriasRouter);
 app.use('/restricoes', restricoesRouter);
 app.use('/itens-cardapio', itensCardapioRouter);
+app.use('/auth', authRouter);
 
 // middleware de erro deve ser o último
 app.use(tratarErro);

@@ -38,24 +38,6 @@ export async function buscarNutricionista(req, res, next) {
   }
 }
 
-export async function criarNutricionista(req, res, next) {
-  try {
-    const { nome, crn, email, senhaHash } = req.body;
-    const nutricionistaCriado = await prisma.nutricionista.create({
-      data: {
-        nome,
-        crn,
-        email,
-        senhaHash,
-      },
-      select: selectSemSenha,
-    });
-    return res.status(201).json(nutricionistaCriado);
-  } catch (erro) {
-    next(erro);
-  }
-}
-
 export async function atualizarNutricionista(req, res, next) {
   const { id } = req.params;
   const { nome, crn, email, senhaHash } = req.body;
