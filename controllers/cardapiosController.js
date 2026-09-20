@@ -1,4 +1,6 @@
-import prisma from '../prisma/client.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function listarCardapios(req, res, next) {
   try {
@@ -28,14 +30,17 @@ export async function buscarCardapio(req, res, next) {
 
 export async function criarCardapio(req, res, next) {
   try {
-    const { data, tipo_refeicao, horario_inicio, horario_fim, nutricionistaId } = req.body;
+    // 🚨 SEGURANÇA: nutricionistaId NÃO vem mais do body
+    const { data, tipo_refeicao, horario_inicio, horario_fim } = req.body;
+    
     const cardapioCriado = await prisma.cardapio.create({
       data: {
         data: new Date(data),
         tipo_refeicao,
         horario_inicio,
         horario_fim,
-        nutricionistaId: Number(nutricionistaId),
+        // O autor é obrigatoriamente quem está logado (injetado pelo middleware)
+        nutricionistaId: req.nutricionista.id,
       },
     });
     return res.status(201).json(cardapioCriado);
@@ -46,24 +51,26 @@ export async function criarCardapio(req, res, next) {
 
 export async function atualizarCardapio(req, res, next) {
   const { id } = req.params;
-  const { data, tipo_refeicao, horario_inicio, horario_fim, nutricionistaId } = req.body;
+  // 🚨 SEGURANÇA: nutricionistaId foi removido para evitar que o autor seja alterado maliciosamente
+  const { data, tipo_refeicao, horario_inicio, horario_fim } = req.body;
   
   try {
     const cardapioAtualizado = await prisma.cardapio.update({
-      where: {
-        id: Number(id),
-      },
+      where: { id: Number(id) },
       data: {
         data: data ? new Date(data) : undefined,
         tipo_refeicao,
         horario_inicio,
         horario_fim,
-        nutricionistaId: nutricionistaId ? Number(nutricionistaId) : undefined,
       },
     });
     return res.status(200).json(cardapioAtualizado);
   } catch (erro) {
-    return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    // P2025 = Registro não encontrado no Prisma
+    if (erro.code === 'P2025') {
+      return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    }
+    next(erro); // Envia outros erros para o middleware global
   }
 }
 
@@ -72,12 +79,13 @@ export async function deletarCardapio(req, res, next) {
   
   try {
     await prisma.cardapio.delete({
-      where: {
-        id: Number(id),
-      },
+      where: { id: Number(id) },
     });
     return res.status(204).end();
   } catch (erro) {
-    return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    if (erro.code === 'P2025') {
+      return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    }
+    next(erro);
   }
 }
