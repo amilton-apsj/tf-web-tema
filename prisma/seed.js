@@ -1,4 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+import { hashSenha } from '../utils/senha.js';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -13,13 +15,16 @@ async function main() {
 
   console.log('Criando dados...');
 
+  // Gerando o hash real para a senha da nutricionista
+  const hashNutri = await hashSenha('senha123'); // A senha em texto puro é 'senha123'
+
   // 1. Criar o Nutricionista
   const nutri = await prisma.nutricionista.create({
     data: {
       nome: 'Dra. Silva',
       crn: 'CRN9-12345',
       email: 'nutri@escola.br',
-      senhaHash: 'hash_da_senha_123',
+      senhaHash: hashNutri, // Aqui usamos o hash de verdade gerado acima
     },
   });
 
@@ -96,6 +101,7 @@ async function main() {
   });
 
   console.log('Seed executado com sucesso!');
+  console.log(`Nutricionista criada: ${nutri.nome} | Email: ${nutri.email} | Senha para testes: senha123`);
 }
 
 main()
