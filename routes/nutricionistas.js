@@ -5,13 +5,19 @@ import {
   atualizarNutricionista,
   deletarNutricionista,
 } from '../controllers/nutricionistasController.js';
-import autenticar from '../middlewares/autenticar.js'; // 1. Importa o middleware
+import autenticar from '../middlewares/autenticar.js';
+import autorizar from '../middlewares/autorizar.js';
 
 const router = Router();
 
+// Rotas públicas
 router.get('/', listarNutricionistas);
 router.get('/:id', buscarNutricionista);
-router.put('/:id', autenticar, atualizarNutricionista); // 2. Protege a rota de edição
-router.delete('/:id', autenticar, deletarNutricionista); // Opcional, mas recomendado
+
+// Rota protegida por autenticação (o próprio nutricionista edita o seu perfil)
+router.put('/:id', autenticar, atualizarNutricionista);
+
+// Rota protegida por autenticação e autorização (apenas ADMINs podem apagar)
+router.delete('/:id', autenticar, autorizar('ADMIN'), deletarNutricionista);
 
 export default router;

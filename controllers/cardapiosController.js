@@ -30,7 +30,6 @@ export async function buscarCardapio(req, res, next) {
 
 export async function criarCardapio(req, res, next) {
   try {
-    // 🚨 SEGURANÇA: nutricionistaId NÃO vem mais do body
     const { data, tipo_refeicao, horario_inicio, horario_fim } = req.body;
     
     const cardapioCriado = await prisma.cardapio.create({
@@ -39,7 +38,7 @@ export async function criarCardapio(req, res, next) {
         tipo_refeicao,
         horario_inicio,
         horario_fim,
-        // O autor é obrigatoriamente quem está logado (injetado pelo middleware)
+        // O autor é obrigatoriamente quem está logado (injetado pelo middleware autenticar)
         nutricionistaId: req.nutricionista.id,
       },
     });
@@ -51,10 +50,27 @@ export async function criarCardapio(req, res, next) {
 
 export async function atualizarCardapio(req, res, next) {
   const { id } = req.params;
-  // 🚨 SEGURANÇA: nutricionistaId foi removido para evitar que o autor seja alterado maliciosamente
   const { data, tipo_refeicao, horario_inicio, horario_fim } = req.body;
   
   try {
+    // 1. Busca o cardápio existente
+    const cardapio = await prisma.cardapio.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!cardapio) {
+      return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    }
+
+    // 2. Trava de segurança: só o dono ou ADMIN pode editar
+    const ehDono = cardapio.nutricionistaId === req.nutricionista.id;
+    const ehAdmin = req.nutricionista.role === 'ADMIN';
+
+    if (!ehDono && !ehAdmin) {
+      return res.status(403).json({ erro: 'Você não tem permissão para alterar este cardápio' });
+    }
+
+    // 3. Atualiza os dados
     const cardapioAtualizado = await prisma.cardapio.update({
       where: { id: Number(id) },
       data: {
@@ -66,11 +82,7 @@ export async function atualizarCardapio(req, res, next) {
     });
     return res.status(200).json(cardapioAtualizado);
   } catch (erro) {
-    // P2025 = Registro não encontrado no Prisma
-    if (erro.code === 'P2025') {
-      return res.status(404).json({ erro: 'Cardápio não encontrado' });
-    }
-    next(erro); // Envia outros erros para o middleware global
+    next(erro);
   }
 }
 
@@ -78,14 +90,31 @@ export async function deletarCardapio(req, res, next) {
   const { id } = req.params;
   
   try {
+    // 1. Busca o cardápio no banco
+    const cardapio = await prisma.cardapio.findUnique({
+      where: { id: Number(id) },
+    });
+
+    // 2. Se não existir, retorna 404 primeiro
+    if (!cardapio) {
+      return res.status(404).json({ erro: 'Cardápio não encontrado' });
+    }
+
+    // 3. Regra de permissão: é o dono OU é ADMIN?
+    const ehDono = cardapio.nutricionistaId === req.nutricionista.id;
+    const ehAdmin = req.nutricionista.role === 'ADMIN';
+
+    if (!ehDono && !ehAdmin) {
+      return res.status(403).json({ erro: 'Você não tem permissão para excluir este cardápio' });
+    }
+
+    // 4. Exclui o cardápio
     await prisma.cardapio.delete({
       where: { id: Number(id) },
     });
+
     return res.status(204).end();
   } catch (erro) {
-    if (erro.code === 'P2025') {
-      return res.status(404).json({ erro: 'Cardápio não encontrado' });
-    }
     next(erro);
   }
 }
