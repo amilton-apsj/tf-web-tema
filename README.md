@@ -124,3 +124,7 @@ Documentação completa das rotas em [`docs/API.md`](./docs/API.md).
    npx prisma migrate dev
    npx prisma db seed
    npm run dev
+
+## Credenciais do seed (Ambiente Local)
+
+- `nutri@escola.br` / `senha123` (Nutricionista)
