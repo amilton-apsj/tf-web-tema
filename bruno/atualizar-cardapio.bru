@@ -1,0 +1,23 @@
+meta {
+  name: Atualizar Cardapio
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3000/cardapios/{{cardapioId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "tipo_refeicao": "Café da manhã",
+    "horario_inicio": "07:00",
+    "horario_fim": "08:00"
+  }
+}

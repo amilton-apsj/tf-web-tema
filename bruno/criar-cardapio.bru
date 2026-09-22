@@ -1,0 +1,30 @@
+meta {
+  name: Criar Cardápio
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/cardapios
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "data": "2026-03-30",
+    "tipo_refeicao": "Almoço",
+    "horario_inicio": "12:00",
+    "horario_fim": "13:00"
+  }
+}
+
+script:post-response {
+  if (res.getBody().id) {
+    bru.setVar("cardapioId", res.getBody().id);
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Deletar Cardapio
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:3000/cardapios/{{cardapioId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,6 +1,6 @@
 # Tralaleros Tun Tun Sahur - 3° Informática A
 
-## Integrantes
+## 👥 Integrantes
 
 - Amilton Pôrto dos Santos Júnior — [GitHub](https://github.com/amilton-apsj)
 - Felipe Neres Silva — [GitHub](https://github.com/fns9-del)
@@ -10,81 +10,53 @@
 
 ---
 
-# Cardápio Escolar
+# 🥗 Cardápio Escolar API
+
+API REST para gerenciamento e divulgação das refeições escolares, permitindo a consulta transparente de cardápios e reduzindo o desperdício de alimentos.
+
+## 🚀 Em produção
+
+https://cardapio-escolar-backend.vercel.app
+
+## 🛠️ Stack
+
+- **Node.js + Express** (ES Modules)
+- **Prisma ORM + PostgreSQL** (Neon Database)
+- **Autenticação:** JWT (JSON Web Token) + `bcryptjs`
+- **Ferramentas de Teste:** Bruno CLI
+
+---
 
 ## 1. Descrição do Domínio
 
 ### Tema do sistema
-
 O sistema tem como tema o **Cardápio Escolar**, uma aplicação voltada para a divulgação e o gerenciamento das refeições oferecidas pela escola aos alunos.
 
 ### Usuários
-
-O sistema é utilizado por dois perfis principais:
-
-- **Funcionários da escola** (equipe de cozinha/nutrição e administração), responsáveis por cadastrar e atualizar o cardápio semanal.
-- **Alunos**, que consultam o cardápio para saber qual será o almoço servido em cada dia.
+- **Nutricionistas / Gestores**: Responsáveis por cadastrar, atualizar e gerenciar os cardápios, categorias, restrições e itens alimentares.
+- **Alunos**: Consultam o cardápio diariamente para saber as refeições disponíveis e detalhes de composição ou restrições alimentares.
 
 ### Problema que o sistema resolve
+A falta de informação prévia sobre o cardápio leva ao desperdício de comida no refeitório escolar. O sistema disponibiliza o cardápio de forma antecipada para que os alunos tomem decisões conscientes sobre o consumo.
 
-Atualmente, os alunos não têm acesso prévio às informações sobre o almoço oferecido pela escola, o que leva muitos a pegarem porções de alimentos que não pretendem consumir simplesmente por desconhecerem o cardápio do dia. Essa falta de comunicação resulta em desperdício de comida, já que os alunos frequentemente descartam pratos que não são do seu agrado.
+---
 
-O sistema busca resolver esse problema disponibilizando o cardápio escolar de forma acessível e antecipada, permitindo que os alunos saibam com antecedência o que será servido e tomem decisões mais conscientes, reduzindo o desperdício de alimentos na escola.
-
-## 2. Modelo Conceitual
-
-![Modelo Conceitual do Banco de Dados](db/conceitual.png)
-
-### 2.1 Descrição das Entidades
-
-**Nutricionista**
-Representa os funcionários autorizados a cadastrar e atualizar as refeições oferecidas. Atributos:
-
-- `id_nutricionista` — identificador único no sistema
-- `nome` — identificação do responsável no painel administrativo
-- `crn` — número do Conselho Regional de Nutricionistas, que valida o profissional
-- `email` e `senha` — necessários para login e segurança das alterações
-
-**Cardápio**
-Representa a oferta de uma refeição específica em um determinado dia, exibida no calendário do sistema. Atributos:
-
-- `id_cardapio` — identificador único
-- `data` — organiza a exibição no calendário
-- `tipo_refeicao` — diferencia Café da Manhã e Almoço
-- `horario_inicio` e `horario_fim` — informam alunos e funcionários sobre o período de funcionamento do refeitório naquela refeição
-
-**Item_Cardápio**
-Representa os alimentos individuais que compõem um cardápio. Atributos:
-
-- `id_item` — identificador único
-- `categoria` — agrupa visualmente os itens (ex: "Salada", "Prato Principal", "Fruta")
-- `nome_alimento` — descrição do prato (ex: "Mingau de Coco")
-- `restricoes` — informação de saúde relevante (ex: "Contém Lactose", "Vegano", "Contém Glúten")
-
-### 2.2 Relacionamentos e Cardinalidades
-
-**Nutricionista → Cardápio (1:N)**
-Um Nutricionista pode cadastrar e gerenciar vários Cardápios ao longo do tempo. Cada Cardápio específico (ex: Almoço do dia 10/08), no entanto, é registrado por um único Nutricionista responsável.
-
-**Cardápio ↔ Item_Cardápio (N:N)**
-Um Cardápio é composto por vários Itens de Cardápio (ex: uma refeição tem arroz, feijão, carne e salada). Ao mesmo tempo, um mesmo Item de Cardápio (ex: "Banana") pode estar presente em vários Cardápios de dias e semanas diferentes. Por isso, a relação é de muitos-para-muitos.
-
-## 3. Modelo Lógico
-
-![Modelo Lógico](prisma/schema.prisma)
+## 2. Modelo Conceitual e Lógico
 
 ### Diagrama Mermaid do Banco de Dados
 
 ```mermaid
 erDiagram
-    Nutricionista ||--o{ Cardapio : "gerencia"
+    Nutricionista ||--o{ Cardapio : "cadastra"
+    Categoria ||--o{ ItemCardapio : "agrupa"
     Cardapio }|--|{ ItemCardapio : "possui"
+    Restricao }|--|{ ItemCardapio : "aplica-se"
 
     Nutricionista {
         Int id PK
         String nome
-        String crn
-        String email
+        String crn UK
+        String email UK
         String senhaHash
         DateTime criadoEm
         DateTime atualizadoEm
@@ -101,22 +73,54 @@ erDiagram
         DateTime atualizadoEm
     }
 
+    Categoria {
+        Int id PK
+        String nome UK
+        DateTime criadoEm
+        DateTime atualizadoEm
+    }
+
+    Restricao {
+        Int id PK
+        String nome UK
+        DateTime criadoEm
+        DateTime atualizadoEm
+    }
+
     ItemCardapio {
         Int id PK
-        String categoria
         String nome_alimento
-        String restricoes "Opcional"
+        Int categoriaId FK
         DateTime criadoEm
         DateTime atualizadoEm
     }
 ```
 
-## 4. Modelo Físico — Migrations e Seed
+## 📑 Endpoints
 
-![Migrations](prisma/migrations)
+Documentação completa das rotas em [`docs/API.md`](./docs/API.md).
 
-![Seed](prisma/seed.js)
+| Método | Rota | Auth / Permissão | Descrição |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/auth/login` | — | Autenticação do nutricionista |
+| `GET` | `/cardapios` | — | Lista todos os cardápios (Público) |
+| `GET` | `/cardapios/:id` | — | Busca cardápio por ID (Público) |
+| `POST` | `/cardapios` | 🔒 Token | Cadastra novo cardápio |
+| `PUT` | `/cardapios/:id` | 🔒 Token (Dono / ADMIN) | Atualiza cardápio existente |
+| `DELETE` | `/cardapios/:id` | 🔒 Token (Dono / ADMIN) | Remove cardápio |
 
-## 5. Evidência funcional
+---
 
-![Evidência funcional](db/prisma-studio.png)
+## 💻 Como rodar localmente
+
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/amilton-apsj/tf-web-tema.git](https://github.com/amilton-apsj/tf-web-tema.git)
+   cd tf-web-tema
+
+   DATABASE_URL="postgresql://usuario:senha@localhost:5432/cardapio_db"
+   JWT_SECRET="sua_chave_secreta_aqui"
+
+   npx prisma migrate dev
+   npx prisma db seed
+   npm run dev

@@ -1,0 +1,11 @@
+meta {
+  name: Buscar Cardápio
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3000/cardapios/{{cardapioId}}
+  body: none
+  auth: none
+}
